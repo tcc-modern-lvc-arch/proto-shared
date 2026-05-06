@@ -1,0 +1,31 @@
+{
+  "repo_notes": [
+    {
+      "content": "This is proto-shared, the canonical Interface Definition Language (IDL) module for the TCC LVC Smart Cities simulation platform. It is a zero-source-code Maven project whose sole purpose is to compile .proto files and generate Java gRPC stubs consumed by all JVM microservices (live-ms-java, virtual-ms-java). This module establishes the unified data contract that guarantees multi-language interoperability across the platform.\n\nStack: Java 25 (build language), Apache Maven (build system), Protocol Buffers 4.34 (IDL), gRPC 1.79 (RPC framework), protobuf-maven-plugin (io.github.ascopes) for code generation.\n\nTwo proto services are defined: event.proto (EventHub service — publish/subscribe to the central event broker) and virtual_areas.proto (AreaService — query geofenced area membership). Generated stubs are published to the local Maven repository and consumed as a dependency by live-ms-java and virtual-ms-java.\n\nKey architectural pattern: Single Source of Truth (SSoT) for all inter-service communication contracts. Any change to a .proto file propagates to all consumers after rebuild, enforcing type-safe, contract-first integration.",
+      "author": "Rafael Pereira"
+    }
+  ],
+  "pages": [
+    {
+      "title": "Architecture Overview",
+      "purpose": "Explain proto-shared's role as the canonical IDL module in the LVC platform: how it serves as the single source of truth for all gRPC service contracts, the zero-source-code design (only .proto files + Maven POM), and how generated stubs flow to downstream JVM consumers (live-ms-java, virtual-ms-java). Include the build dependency chain and the contract-first integration pattern."
+    },
+    {
+      "title": "Proto Contracts",
+      "purpose": "Document the two .proto service definitions in src/main/proto/. For event.proto: the EventHub service with Publish/Subscribe RPCs, message types for LVC events (vessel positions, bus locations, flooding alerts, drone telemetry, area transitions), and the topic-based routing model. For virtual_areas.proto: the AreaService with area membership queries, Area message shape (polygon/circle/corridor geometries), and Checkin/Checkout event types. Cover the proto3 syntax and package naming conventions.",
+      "parent": "Architecture Overview"
+    },
+    {
+      "title": "Build & Code Generation Pipeline",
+      "purpose": "Document the Maven build pipeline: how protobuf-maven-plugin (io.github.ascopes) compiles .proto files into Java stubs (protoc-gen-grpc-java), the output directory (target/generated-sources/protobuf/), and the mvn clean install -DskipTests command that publishes the JAR to the local Maven repository. Cover the protobuf-java and grpc-stub dependencies, the Maven coordinates (groupId, artifactId, version), and how to verify generated sources."
+    },
+    {
+      "title": "Integration with Downstream Services",
+      "purpose": "Document how live-ms-java and virtual-ms-java consume proto-shared as a Maven dependency. Cover: the dependency declaration in downstream pom.xml files, the rebuild propagation workflow (proto change → mvn install in proto-shared → mvn clean compile in consumers), the gRPC client/server stub usage patterns, and how the shared contract eliminates manual serialization code. Include troubleshooting for stale stubs after proto changes."
+    },
+    {
+      "title": "Adding New Proto Definitions",
+      "purpose": "Step-by-step guide for extending the IDL: (1) create a new .proto file in src/main/proto/ following existing conventions (proto3 syntax, package naming, java_package option), (2) define service RPCs and message types, (3) run mvn clean install to regenerate stubs, (4) update downstream consumers to use the new stubs. Cover naming conventions, backward compatibility considerations, and the protobuf-maven-plugin configuration in pom.xml."
+    }
+  ]
+}
