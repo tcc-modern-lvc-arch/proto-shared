@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package messaging;
+
+option java_multiple_files = true;
+option java_package = "io.github.raphonzius.lvc.proto.messaging";
+option java_outer_classname = "MessagingProto";
+
+service Messaging {
+  rpc Subscribe(RegisterRequest) returns (stream Message);
+  rpc SendMessage(Message) returns (MessageSentResponse);
+}
+
+message MessageSentResponse {
+  string status = 1;
+}
+
+message RegisterRequest {
+  string topic = 1;
+}
+
+message Message {
+  string topic = 1;
+  string from = 2;
+  string message = 3;
+}

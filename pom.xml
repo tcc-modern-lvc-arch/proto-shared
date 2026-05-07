@@ -8,7 +8,7 @@
     <artifactId>proto-shared</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
-    <description>Shared gRPC/Protobuf stubs for all TCC microservices</description>
+    <description>Shared gRPC/Protobuf stubs for all TCC microservices — generates Java, Python, and Rust stubs from a single .proto source of truth</description>
 
     <properties>
         <java.version>25</java.version>
@@ -58,6 +58,11 @@
                     <sourceDirectories>
                         <sourceDirectory>${project.basedir}/src/main/proto</sourceDirectory>
                     </sourceDirectories>
+
+                    <javaEnabled>true</javaEnabled>
+                    <pythonEnabled>true</pythonEnabled>
+                    <pythonStubsEnabled>true</pythonStubsEnabled>
+
                     <plugins>
                         <plugin kind="binary-maven">
                             <groupId>io.grpc</groupId>
@@ -65,6 +70,10 @@
                             <version>${grpc.version}</version>
                             <!--suppress UnresolvedMavenProperty-->
                             <classifier>${os.detected.classifier}</classifier>
+                        </plugin>
+                        <plugin kind="path">
+                            <executableName>grpc_python_plugin</executableName>
+                            <options>grpc_python</options>
                         </plugin>
                     </plugins>
                 </configuration>
