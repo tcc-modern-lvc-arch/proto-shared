@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(defuddle parse *)",
+      "Bash(rtk ls *)",
+      "PowerShell(Get-ChildItem -Recurse \"C:\\\\Users\\\\rafae\\\\TCC\\\\proto-shared\\\\target\\\\generated-sources\\\\protobuf\" | Where-Object { -not $_.PSIsContainer } | Select-Object -ExpandProperty FullName)"
+    ]
+  }
+}

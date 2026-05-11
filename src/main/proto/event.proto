@@ -66,6 +66,7 @@ message DronePayload {
   optional bytes  picture_jpeg     = 4; // raw JPEG frame — only set on PHOTO events
   optional float  severity         = 5; // 0.0-1.0 — only set on CRASH events
   optional string collision_object = 6; // obstacle name — only set on CRASH events
+  optional string mission_id       = 7; // populated on PHOTO events when triggered by a mission
 }
 
 // live-ms-java: AIS Friends API (real vessels)

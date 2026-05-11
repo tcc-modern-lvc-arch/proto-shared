@@ -58,33 +58,39 @@
                     <sourceDirectories>
                         <sourceDirectory>${project.basedir}/src/main/proto</sourceDirectory>
                     </sourceDirectories>
-
-                    <javaEnabled>true</javaEnabled>
-                    <pythonEnabled>true</pythonEnabled>
-                    <pythonStubsEnabled>true</pythonStubsEnabled>
-
-                    <plugins>
-                        <plugin kind="binary-maven">
-                            <groupId>io.grpc</groupId>
-                            <artifactId>protoc-gen-grpc-java</artifactId>
-                            <version>${grpc.version}</version>
-                            <!--suppress UnresolvedMavenProperty-->
-                            <classifier>${os.detected.classifier}</classifier>
-                        </plugin>
-                        <plugin kind="path">
-                            <executableName>grpc_python_plugin</executableName>
-                            <options>grpc_python</options>
-                        </plugin>
-                    </plugins>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>generate</id>
+                        <id>java-generate</id>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <configuration>
+                            <javaEnabled>true</javaEnabled>
+                            <pythonEnabled>false</pythonEnabled>
+                            <pythonStubsEnabled>false</pythonStubsEnabled>
                             <outputDirectory>${project.basedir}/target/generated-sources/protobuf</outputDirectory>
+                            <plugins>
+                                <plugin kind="binary-maven">
+                                    <groupId>io.grpc</groupId>
+                                    <artifactId>protoc-gen-grpc-java</artifactId>
+                                    <version>${grpc.version}</version>
+                                    <!--suppress UnresolvedMavenProperty-->
+                                    <classifier>${os.detected.classifier}</classifier>
+                                </plugin>
+                            </plugins>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>python-generate</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <javaEnabled>false</javaEnabled>
+                            <pythonEnabled>true</pythonEnabled>
+                            <pythonStubsEnabled>true</pythonStubsEnabled>
+                            <outputDirectory>${project.basedir}/target/generated-sources/protobuf/python</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
