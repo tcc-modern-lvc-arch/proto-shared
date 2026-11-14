@@ -6,10 +6,10 @@ Single source of truth for all gRPC/Protobuf contracts in the TCC LVC platform. 
 
 - **Java 25** — Build language (Maven)
 - **Apache Maven** — Build system
-- **Protocol Buffers 4.34** — IDL
-- **gRPC 1.79** — RPC framework
-- **ascopes protobuf-maven-plugin** — Java + Python codegen
-- **Docker** — Rust codegen image (`codegen.Dockerfile`)
+- **Protocol Buffers 4.36.2** — IDL (protobuf-java and protobuf-bom)
+- **gRPC 1.85.1** — RPC framework (grpc-bom)
+- **ascopes protobuf-maven-plugin 5.1.12** — Java + Python codegen
+- **Docker** — Rust codegen image (`codegen.Dockerfile`, runs as non-root UID 10001)
 
 ## Quick Start
 
@@ -57,6 +57,11 @@ cargo build                     # build.rs reads ../proto-shared/src/main/proto/
 docker build -t proto-codegen:latest -f codegen.Dockerfile .
 cd ../event-hub && docker build -t event-hub .
 ```
+
+## Docker and CI
+
+- `codegen.Dockerfile` builds the Rust codegen image: `protoc` with `protoc-gen-prost` and `protoc-gen-tonic`, running as non-root UID 10001 and with `HEALTHCHECK NONE` (one-shot generator, not a service).
+- `.github/workflows/security.yml` runs `mvn verify` and Trivy gates on the filesystem (vulnerabilities, secrets, misconfigurations) and on `codegen.Dockerfile` (config). Both block HIGH/CRITICAL findings with an available fix.
 
 ## Documentation
 

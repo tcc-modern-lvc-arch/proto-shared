@@ -17,7 +17,7 @@ docker build -t proto-codegen:latest -f codegen.Dockerfile .
 
 # After changing .proto files, rebuild and propagate:
 mvn clean install -DskipTests                          # Java + Python
-cd ../live-ms-java/live-ms-java && mvn clean compile   # Java consumer
+cd ../live-ms-java && mvn clean compile               # Java consumer
 cd ../virtual-ms-java/virtual-areas && mvn clean compile
 cd ../constructive-airsim-ms-python && python scripts/gen_proto.py  # Python consumer
 cd ../event-hub && cargo build                         # Rust consumer (local)
@@ -28,7 +28,8 @@ cd ../event-hub && cargo build                         # Rust consumer (local)
 - **ascopes protobuf-maven-plugin** handles `.proto` compilation
 - **Java** stubs via `protoc-gen-grpc-java` (binary-maven plugin)
 - **Python** stubs via `protoc` built-in `--python_out` + `grpc_python_plugin` (path plugin)
-- **Rust** stubs via `codegen.Dockerfile` (protoc + protoc-gen-prost + protoc-gen-tonic)
+- **Rust** stubs via `codegen.Dockerfile` (protoc + protoc-gen-prost + protoc-gen-tonic). The image runs as non-root UID 10001 and has `HEALTHCHECK NONE`.
+- **CI:** `.github/workflows/security.yml` runs `mvn verify`, a Trivy fs gate (vuln, secret, misconfig) and a Trivy config gate for `codegen.Dockerfile`. Both block HIGH/CRITICAL findings with a fix.
 - Output directories:
   - Java: `target/generated-sources/protobuf/java/`
   - Python: `target/generated-sources/protobuf/python/`
